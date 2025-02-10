@@ -29,7 +29,7 @@ pnpm install @elizaos/plugin-evm
 
 ```env
 # Required
-EVM_PRIVATE_KEY=your-private-key-here
+EVM_PRIVATE_KEY=your-private-key-here #Add the "0x" prefix infront of your private key string
 
 # Optional - Custom RPC URLs
 EVM_PROVIDER_URL=https://your-custom-mainnet-rpc-url
