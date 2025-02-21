@@ -1,8 +1,9 @@
 import { getOnChainTools } from "@goat-sdk/adapter-vercel-ai";
 import { MODE, USDC, erc20 } from "@goat-sdk/plugin-erc20";
-import { kim } from "@goat-sdk/plugin-kim";
+import { uniswap} from "@goat-sdk/plugin-uniswap";
 import { sendETH } from "@goat-sdk/wallet-evm";
 import type { WalletClientBase } from "@goat-sdk/core";
+
 
 import {
     generateText,
@@ -18,7 +19,7 @@ export async function getOnChainActions(wallet: WalletClientBase) {
     const actionsWithoutHandler = [
         {
             name: "SWAP_TOKENS",
-            description: "Swap two different tokens using KIM protocol",
+            description: "Swap two different tokens using Uniswap protocol",
             similes: [],
             validate: async () => true,
             examples: [],
@@ -29,7 +30,14 @@ export async function getOnChainActions(wallet: WalletClientBase) {
     const tools = await getOnChainTools({
         wallet: wallet,
         // 2. Configure the plugins you need to perform those actions
-        plugins: [sendETH(), erc20({ tokens: [USDC, MODE] }), kim()],
+        plugins: [
+            sendETH(), 
+            erc20({ tokens: [USDC, MODE ] }), 
+            uniswap({
+                baseUrl: process.env.UNISWAP_BASE_URL as string,
+                apiKey: process.env.UNISWAP_API_KEY as string
+            })
+        ],
     });
 
     // 3. Let GOAT handle all the actions
