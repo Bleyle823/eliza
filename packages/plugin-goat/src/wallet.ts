@@ -2,12 +2,66 @@ import type { WalletClientBase } from "@goat-sdk/core";
 import { viem } from "@goat-sdk/wallet-viem";
 import { createWalletClient, formatEther, http, parseEther } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { mode } from "viem/chains";
+import {
+    // Optimism
+    optimism,
+    optimismGoerli,
+    optimismSepolia,
+    base,
+    baseGoerli,
+    baseSepolia,
+    zora,
+    zoraSepolia,
+    zoraTestnet,
+    worldchain,
+    worldchainSepolia,
+    mode,
+    modeTestnet,
+    fraxtal,
+    fraxtalTestnet,
+    lisk,
+    liskSepolia,
+    dreyerxMainnet,
+    dreyerxTestnet,
+    cyber,
+    cyberTestnet,
+    ink,
+    inkSepolia,
+    orderly,
+    orderlySepolia,
+    kroma,
+    kromaSepolia,
+    swan,
+    swanProximaTestnet,
+    swanSaturnTestnet,
+    superlumio,
+    superseed,
+    superseedSepolia,
+    manta,
+    mantaTestnet,
+    mantaSepoliaTestnet,
+    mantle,
+    mantleTestnet,
+    mantleSepoliaTestnet,
+    mint,
+    mintSepoliaTestnet,
+    redstone,
+    shape,
+    shapeSepolia,
+    ham,
+    funkiMainnet,
+    funkiSepolia,
+    metalL2,
+    rollux,
+    rolluxTestnet,
+    soneiumMinato,
+  } from "viem/chains";
+  
 import { publicActionsL2 } from 'viem/op-stack'
 
 // Add the chain you want to use, remember to update also
 // the EVM_PROVIDER_URL to the correct one for the chain
-export const chain = mode;
+export const chain =  optimismSepolia;
 
 export async function getWalletClient(
     getSetting: (key: string) => string | undefined
@@ -20,7 +74,7 @@ export async function getWalletClient(
 
     const wallet = createWalletClient({
         account: privateKeyToAccount(privateKey as `0x${string}`),
-        chain: chain,
+        chain:optimismSepolia,
         transport: http(provider),
     }).extend(publicActionsL2()) 
 
@@ -28,13 +82,13 @@ export async function getWalletClient(
         account: privateKeyToAccount(privateKey as `0x${string}`),
         to: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
         value: parseEther('1'),
-        chain: chain
+        chain: optimismSepolia
     })
     const feeInEther = formatEther(fee);
 
     // Log the estimated fee to the console
     try {
-        console.log(`Estimated Total Fee: ${fee} ETH`);
+        console.log(`Estimated Total Fee: ${feeInEther} ETH`);
     } catch (error) {
         console.error('Error estimating the transaction fee:', error);
     }
@@ -50,7 +104,7 @@ export function getWalletProvider(walletClient: WalletClientBase) {
                 const balance = await walletClient.balanceOf(address);
                 return `EVM Wallet Address: ${address}\nBalance: ${balance} ETH`;
             } catch (error) {
-                console.error("Error in EVM wallet provider:", error);
+                console.error("Error in  wallet provider:", error);
                 return null;
             }
         },

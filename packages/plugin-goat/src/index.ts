@@ -5,12 +5,12 @@ import { getWalletClient, getWalletProvider } from "./wallet";
 async function createGoatPlugin(
     getSetting: (key: string) => string | undefined
 ): Promise<Plugin> {
-    const walletClient = getWalletClient(getSetting);
+    const walletClient = await getWalletClient(getSetting);
     const actions = await getOnChainActions(walletClient);
 
     return {
-        name: "[GOAT] Onchain Actions",
-        description: "Mode integration plugin",
+        name: "Superchain Plugin",
+        description: "Superchain Plugin built with Op Stack",
         providers: [getWalletProvider(walletClient)],
         evaluators: [],
         services: [],

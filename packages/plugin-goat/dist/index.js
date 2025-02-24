@@ -1,8 +1,10 @@
 // src/actions.ts
 import { getOnChainTools } from "@goat-sdk/adapter-vercel-ai";
-import { MODE, USDC, erc20 } from "@goat-sdk/plugin-erc20";
-import { kim } from "@goat-sdk/plugin-kim";
+//import { kim } from "@goat-sdk/plugin-kim";
 import { sendETH } from "@goat-sdk/wallet-evm";
+import {  PEPE, USDC, erc20 } from "@goat-sdk/plugin-erc20";
+import { uniswap} from "@goat-sdk/plugin-uniswap";
+import { etherscan } from "@goat-sdk/plugin-etherscan";
 import {
   generateText,
   ModelClass,
@@ -12,7 +14,7 @@ async function getOnChainActions(wallet) {
   const actionsWithoutHandler = [
     {
       name: "SWAP_TOKENS",
-      description: "Swap two different tokens using KIM protocol",
+      description: "Swap two different tokens using Uniswap protocol",
       similes: [],
       validate: async () => true,
       examples: []
@@ -22,7 +24,31 @@ async function getOnChainActions(wallet) {
   const tools = await getOnChainTools({
     wallet,
     // 2. Configure the plugins you need to perform those actions
-    plugins: [sendETH(), erc20({ tokens: [USDC, MODE] }), kim()]
+    plugins: [
+      sendETH(), 
+      erc20({ tokens: [USDC,PEPE
+
+      // Optimism Network
+      //     {
+      //     decimals: 18,
+      //     symbol: "OP",
+      //     name: "Optimism",
+      //     chains: {
+      //         "1": {
+      //             contractAddress: "0x4200000000000000000000000000000000000042",
+      //         },
+      //     },
+      // },
+  
+  ] }), 
+      uniswap({
+          baseUrl: process.env.UNISWAP_BASE_URL,
+          apiKey: process.env.UNISWAP_API_KEY
+      }),
+      etherscan({
+          apiKey: process.env.ETHERSCAN_API_KEY
+        }),
+  ]
   });
   return actionsWithoutHandler.map((action) => ({
     ...action,
@@ -44,10 +70,10 @@ function getActionHandler(actionName, actionDescription, tools) {
         context,
         tools,
         maxSteps: 10,
-        // Uncomment to see the log each tool call when debugging
-        // onStepFinish: (step) => {
-        //     console.log(step.toolResults);
-        // },
+        //Uncomment to see the log each tool call when debugging
+        onStepFinish: (step) => {
+            console.log(step.toolResults);
+        },
         modelClass: ModelClass.LARGE
       });
       const response = composeResponseContext(result, currentState);
@@ -169,8 +195,8 @@ async function generateResponse(runtime, context) {
 import { viem } from "@goat-sdk/wallet-viem";
 import { createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { mode } from "viem/chains";
-var chain = mode;
+import {  optimism} from "viem/chains";
+var chain =  optimism;
 function getWalletClient(getSetting) {
   const privateKey = getSetting("EVM_PRIVATE_KEY");
   if (!privateKey) return null;
@@ -205,7 +231,7 @@ async function createGoatPlugin(getSetting) {
   const actions = await getOnChainActions(walletClient);
   return {
     name: "[GOAT] Onchain Actions",
-    description: "Mode integration plugin",
+    description: "Optimism integration plugin",
     providers: [getWalletProvider(walletClient)],
     evaluators: [],
     services: [],

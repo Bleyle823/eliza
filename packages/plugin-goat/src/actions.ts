@@ -1,8 +1,9 @@
 import { getOnChainTools } from "@goat-sdk/adapter-vercel-ai";
-import { MODE, USDC, erc20 } from "@goat-sdk/plugin-erc20";
+import {  PEPE, USDC, erc20 } from "@goat-sdk/plugin-erc20";
 import { uniswap} from "@goat-sdk/plugin-uniswap";
 import { sendETH } from "@goat-sdk/wallet-evm";
 import type { WalletClientBase } from "@goat-sdk/core";
+import { etherscan } from "@goat-sdk/plugin-etherscan";
 
 
 import {
@@ -32,11 +33,28 @@ export async function getOnChainActions(wallet: WalletClientBase) {
         // 2. Configure the plugins you need to perform those actions
         plugins: [
             sendETH(), 
-            erc20({ tokens: [USDC, MODE ] }), 
+            erc20({ tokens: [USDC,PEPE
+
+            // Optimism Network
+            //     {
+            //     decimals: 18,
+            //     symbol: "OP",
+            //     name: "Optimism",
+            //     chains: {
+            //         "1": {
+            //             contractAddress: "0x4200000000000000000000000000000000000042",
+            //         },
+            //     },
+            // },
+        
+        ] }), 
             uniswap({
                 baseUrl: process.env.UNISWAP_BASE_URL as string,
                 apiKey: process.env.UNISWAP_API_KEY as string
-            })
+            }),
+            etherscan({
+                apiKey: process.env.ETHERSCAN_API_KEY as string
+              }),
         ],
     });
 
